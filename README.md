@@ -2,7 +2,7 @@
 
 A starting point for a discussion forum web application. This project is under development and aims to allow users to view courses, topics, posts, and answers. Some routes and functionality are currently implemented, with further features to be added.
 
-## Features (not implemented)
+## Features (Implemented)
 
 - GET `/courses` – Returns a list of courses.
 - GET `/courses/:id` – Returns a single course by id.
