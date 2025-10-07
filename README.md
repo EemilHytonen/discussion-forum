@@ -65,7 +65,7 @@ chmod +x deploy.sh
 This ensures that your GitHub repository and the live Deno deployment are always in sync.
 
 Alternatively, you can run the commands manually:
-git add .
-git commit -m "Your message"
-git push origin main
+git add . |
+git commit -m "Your message" |
+git push origin main |
 deployctl deploy --entrypoint server/app.js --project=discussion-forum --prod
