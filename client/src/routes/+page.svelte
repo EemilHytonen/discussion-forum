@@ -1,14 +1,12 @@
-<script>
-  import Message from "$lib/components/Message.svelte";
-  import Questions from "$lib/components/Questions.svelte";
-</script>
+<h1>Discussion Forum</h1>
+<p>Click below to navigate.</p>
 
-<Message />
-<Questions />
-
-<h1>Welcome!</h1>
-<p>Click below to see the courses.</p>
-<a href="/courses"><button>Courses</button></a>
+<div class="actions">
+  <a href="/courses">
+    <button>Courses</button></a>
+  <a href="/technical">
+    <button>Technical</button></a>
+</div>
 
 <style>
   h1 {
@@ -16,13 +14,19 @@
     color: #2c3e50;
   }
 
-  button {
-    margin-top: 1rem;
-  }
-
   p {
     margin-top: 1rem;
     font-size: 1.2rem;
   }
-</style>
 
+  .actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  button {
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+  }
+</style>
