@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
 
-const API_URL = "http://localhost:8000";
+//const API_URL = "http://localhost:8000";
+const API_URL = "http://server:8000"; // server = backend service name Docker Compose
 const COURSE_ID = 1;
 
 export const questions = writable([]);
