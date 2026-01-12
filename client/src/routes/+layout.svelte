@@ -6,6 +6,7 @@
   <nav>
     <a href="/" class:active={$page.url.pathname === '/'}>Home</a>
     <a href="/courses" class:active={$page.url.pathname.startsWith('/courses')}>Courses</a>
+    <a href="/technical" class:active={$page.url.pathname.startsWith('/technical')}>Technical</a>
   </nav>
 </header>
 
