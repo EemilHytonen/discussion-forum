@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Script will fail if it detects an error
+set -e
+
 # Prompt the user for a commit message
 read -p "Enter commit message: " commit_message
 
