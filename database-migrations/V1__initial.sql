@@ -1,0 +1,18 @@
+CREATE TABLE todos (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  done BOOLEAN NOT NULL DEFAULT false
+);
+
+CREATE TABLE courses (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE questions (
+  id SERIAL PRIMARY KEY,
+  course_id INTEGER REFERENCES courses(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  text TEXT NOT NULL,
+  upvotes INTEGER NOT NULL DEFAULT 0
+);

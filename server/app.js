@@ -4,64 +4,100 @@ import { logger } from "@hono/hono/logger";
 import postgres from "postgres";
 
 const app = new Hono();
-const sql = postgres();
+const sql = postgres({
+  host: process.env.PGHOST || "wsd_project_database",
+  port: process.env.PGPORT || 5432,
+  username: process.env.PGUSER || "username",
+  password: process.env.PGPASSWORD || "password",
+  database: process.env.PGDATABASE || "database",
+});
 
 app.use("/*", cors());
 app.use("/*", logger());
 
-app.get("/", (c) => c.json({ message: "Hello world!" }));
+const isValidText = (value) =>
+  typeof value === "string" && value.trim().length >= 3;
 
-app.get("/courses", (c) =>
-    c.json({
-        courses: [
-            {id: 1, name: "Web Software Developmet"},
-            {id: 2, name: "Device-Agnostic Design"}
-        ]
-    })
-);
-
-app.get("/courses/:id", (c) => {
-    const id = Number(c.req.param("id"));
-    return c.json({
-        course: {id: id, name: "Course Name"}
-    });
+// Courses
+app.get("/api/courses", async (c) => {
+  const courses = await sql`SELECT id, name FROM courses`;
+  return c.json(courses);
 });
 
-app.post("/courses", async (c) => {
-  const body = await c.req.json();
-  const name = body.name ?? "Course Name";
-  return c.json({
-    course: { id: 3, name }
-  });
+app.get("/api/courses/:id", async (c) => {
+  const id = Number(c.req.param("id"));
+  const [course] = await sql`SELECT id, name FROM courses WHERE id = ${id}`;
+  return c.json(course);
 });
 
-app.get("/courses/:id/topics", (c) =>
-  c.json({
-    topics: [
-      { id: 1, name: "Topic 1" },
-      { id: 2, name: "Topic 2" }
-    ]
-  })
-);
+app.post("/api/courses", async (c) => {
+  const { name } = await c.req.json();
+  if (!isValidText(name)) return c.json({ error: "Invalid course name" }, 400);
 
-app.get("/courses/:cId/topics/:tId/posts", (c) =>
-  c.json({
-    posts: [
-      { id: 1, title: "Post 1" },
-      { id: 2, title: "Post 2" }
-    ]
-  })
-);
+  const [course] = await sql`
+    INSERT INTO courses (name) VALUES (${name})
+    RETURNING id, name
+  `;
+  return c.json(course);
+});
 
-app.get("/courses/:cId/topics/:tId/posts/:pId", (c) => {
-  const pId = Number(c.req.param("pId"));
-  return c.json({
-    post: { id: pId, title: "Post Title" },
-    answers: [
-      { id: 1, content: "Answer 1" },
-      { id: 2, content: "Answer 2" }
-    ]
-  });
+app.delete("/api/courses/:id", async (c) => {
+  const id = Number(c.req.param("id"));
+  const [course] = await sql`
+    DELETE FROM courses WHERE id = ${id} RETURNING id, name
+  `;
+  return c.json(course);
+});
+
+// Questions
+app.get("/api/courses/:id/questions", async (c) => {
+  const courseId = Number(c.req.param("id"));
+  const questions = await sql`
+    SELECT id, title, text, upvotes, course_id
+    FROM questions
+    WHERE course_id = ${courseId}
+  `;
+  return c.json(questions);
+});
+
+app.post("/api/courses/:id/questions", async (c) => {
+  const courseId = Number(c.req.param("id"));
+  const { title, text } = await c.req.json();
+
+  if (!isValidText(title) || !isValidText(text))
+    return c.json({ error: "Invalid question data" }, 400);
+
+  const [question] = await sql`
+    INSERT INTO questions (course_id, title, text)
+    VALUES (${courseId}, ${title}, ${text})
+    RETURNING id, title, text, upvotes, course_id
+  `;
+  return c.json(question);
+});
+
+app.post("/api/courses/:id/questions/:qId/upvote", async (c) => {
+  const courseId = Number(c.req.param("id"));
+  const qId = Number(c.req.param("qId"));
+
+  const [question] = await sql`
+    UPDATE questions
+    SET upvotes = upvotes + 1
+    WHERE id = ${qId} AND course_id = ${courseId}
+    RETURNING id, title, text, upvotes, course_id
+  `;
+  return c.json(question);
+});
+
+app.delete("/api/courses/:id/questions/:qId", async (c) => {
+  const courseId = Number(c.req.param("id"));
+  const qId = Number(c.req.param("qId"));
+
+  const [question] = await sql`
+    DELETE FROM questions
+    WHERE id = ${qId} AND course_id = ${courseId}
+    RETURNING id, title, text, upvotes, course_id
+  `;
+  return c.json(question);
 });
 
 export default app;

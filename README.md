@@ -34,8 +34,8 @@ git clone git@github.com:EemilHytonen/discussion-forum.git
 2. Start Docker services:
 docker compose up -d
 
-3. Run the server:
-deno task start
+3. Frontend is available at:
+http://localhost:5173
 
 4. Access API at:
 http://localhost:8000
