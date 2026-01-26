@@ -15,6 +15,12 @@ fi
 # Add all changes to Git staging
 git add .
 
+# Fail if project.env is staged or tracked changes include it
+if git status --porcelain | grep -q "project.env"; then
+  echo "ERROR: project.env detected in git changes. Aborting."
+  exit 1
+fi
+
 # Create a commit with the user's message
 git commit -m "$commit_message"
 
