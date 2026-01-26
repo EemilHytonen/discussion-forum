@@ -1,71 +1,114 @@
 # Discussion Forum
 
-A starting point for a discussion forum web application. This project is under development and aims to allow users to view courses, topics, posts, and answers. Some routes and functionality are currently implemented, with further features to be added.
+This project is a simple discussion forum created as a learning exercise.
+The main goal of the project is to practice backend development, project structure,
+environment variable handling, and testing.
 
-## Features (Implemented)
+The project is incomplete and intended for educational purposes.
 
-- GET `/courses` – Returns a list of courses.
-- GET `/courses/:id` – Returns a single course by id.
-- POST `/courses` – Adds a new course (static id for now).
-- GET `/courses/:id/topics` – Returns topics for a course.
-- GET `/courses/:cId/topics/:tId/posts` – Returns posts for a topic.
-- GET `/courses/:cId/topics/:tId/posts/:pId` – Returns a single post with answers.
+## Overview
 
-## Technologies Used
+The application consists of a backend and a frontend.
+The backend is implemented using Deno and the frontend is located in the client directory.
 
-- Deno – Runtime for the server-side application.
-- Hono – Web framework for building the server routes.
-- Docker – Containerization for local development and environment isolation.
-- PostgreSQL – (future use) database for storing persistent data.
-- Flyway – (future use) database migrations management.
-- Git & GitHub – Version control and remote repository for code.
+The database and migrations are planned, but not fully enabled yet.
+Some API routes still return mocked or hardcoded data.
 
-## Project Status
+## Quick start
 
-- Work in progress. Current server routes return JSON responses with static or hardcoded data.
-- Database integration has been removed for now; planned to be added later.
-- Frontend and E2E tests are partially scaffolded.
+### Prerequisites
 
-## How to Run Locally
+- Docker + Docker Compose
+- Deno
+- Node/npm
 
-1. Clone the repository:
-git clone git@github.com:EemilHytonen/discussion-forum.git
+### To run locally
 
-2. Start Docker services:
-docker compose up -d
+1. Start dependencies:
+```
+cmd
+docker compose up --build
+```
 
-3. Frontend is available at:
-http://localhost:5173
+2. Open browser:
 
-4. Access API at:
-http://localhost:8000
+- Frontend: http://localhost:5173
+- Backend: http://localhost:8000
 
-## Notes
+## Project structure
+```
+- client/                   Frontend
+- server/                   Backend (Deno + Hono)
+- database-migrations/      Database migrations (not actively used)
+- e2e-tests/                Playwright E2E tests (not implemented yet)
+- compose.yaml              Docker Compose configuration
+- deno.json                 Deno tasks and configuration
+- deploy.sh                 Deploy script
+- project.env.example       Example environment variables file
+- README.md
+```
+## Technologies used
 
-- Project is under active development; functionality and routes may change.
-- This README will be updated as new features are implemented.
-- GitHub repository is connected with local development; commits and updates can be pushed automatically after changes are deployed with Deno.
-- To update both GitHub and Deno deployment at the same time, use the deploy.sh script:
+- Deno
+- Hono
+- Docker
+- PostgreSQL (not implemented)
+- Flyway (not implemented)
+- Playwright (E2E tests, not implemented)
 
-1. Open a terminal and navigate to the project folder:
-cd /path/to/your/project
+## The following routes are implemented:
 
-2. Make the script executable (only required the first time):
-chmod +x deploy.sh
+- GET /courses
+- GET /courses/:id
+- POST /courses
+- GET /courses/:id/topics
+- GET /courses/:cId/topics/:tId/posts
+- GET /courses/:cId/topics/:tId/posts/:pId
 
-3. Run the script:
-./deploy.sh
+- Not all routes currently use a database.
 
-4. Follow the prompt to enter a commit message. The script will:
-- Add all changes to Git
-- Commit the changes with your message
-- Push the commit to GitHub
-- Deploy the updated project to Deno
+## Environment variables
 
-This ensures that your GitHub repository and the live Deno deployment are always in sync.
+The project uses environment variables for database connections and configuration.
 
-Alternatively, you can run the commands manually:
-git add . |
-git commit -m "Your message" |
-git push origin main |
-deployctl deploy --entrypoint server/app.js --project=discussion-forum --prod
+The repository includes a `project.env.example` file that contains all required
+environment variable keys without real values.
+
+Example:
+
+```env
+# Values are intentionally empty.
+# Real values are provided in production environment variables.
+
+# Database (PostgreSQL)
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+
+# Flyway
+FLYWAY_USER=
+FLYWAY_PASSWORD=
+FLYWAY_URL=
+
+# Postgres client
+PGUSER=
+PGPASSWORD=
+PGDATABASE=
+PGHOST=
+PGPORT=
+```
+
+The actual project.env file containing real values is intended for local or production use
+and should never be committed to the repository.
+
+## Deployment
+
+A deploy.sh script is included to simplify deployment.
+
+- ./deploy.sh
+
+The script automates committing changes and deploying the project.
+
+# Notes
+This project is a learning exercise and demo. 
+It's not intended for production use. Some features are incomplete by design.
